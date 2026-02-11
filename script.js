@@ -1,6 +1,6 @@
 // API Configuration (TOKEN HERE - FOR LEARNING ONLY!)
 const HF_TOKEN = "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"; // Replace with your actual token
-const API_URL = "https://api-inference.huggingface.co/models/gpt2";
+const API_URL = "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct";
 // DOM Elements
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
