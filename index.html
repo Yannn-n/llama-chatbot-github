@@ -1,265 +1,166 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLaMA 3.2 Chatbot - Token Sesi</title>
+    <title>🏴‍☠️ Pirate Chatbot - AI Powered</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="assets/llama-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Seaweed+Script&family=Special+Elite&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="logo">
-                <h1><i class="fas fa-robot"></i> LLaMA 3.2 Chatbot</h1>
-                <p class="subtitle">Token Aman - Hanya Sesi Browser</p>
-            </div>
-            <div class="token-display" id="tokenDisplay">
-                <span class="token-status" id="tokenStatus">
-                    <i class="fas fa-key"></i>
-                    <span id="tokenInfo">Token: Tidak Aktif</span>
-                </span>
-                <button id="refreshTokenBtn" class="btn-small" title="Refresh Token">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
+            <div class="pirate-title">
+                <div class="title-icon">
+                    <i class="fas fa-skull-crossbones"></i>
+                    <i class="fas fa-ship"></i>
+                    <i class="fas fa-treasure-chest"></i>
+                </div>
+                <h1>Pirate Chatbot</h1>
+                <p class="subtitle">Ahoy matey! Chat with an AI pirate using Hugging Face API</p>
             </div>
         </header>
 
-        <!-- Token Configuration -->
-        <div class="token-config" id="tokenConfig">
-            <div class="config-card">
-                <h2><i class="fas fa-cogs"></i> Konfigurasi Token</h2>
-                
-                <div class="token-options">
-                    <div class="option-card" id="optionManual">
-                        <h3><i class="fas fa-keyboard"></i> 1. Token Manual</h3>
-                        <p>Masukkan token Hugging Face secara manual:</p>
-                        <div class="input-group">
-                            <input type="text" id="manualToken" 
-                                   placeholder="hf_xxxxxxxxxxxxxxxxxxxx" 
-                                   spellcheck="false">
-                            <button id="saveManualBtn" class="btn-primary">
-                                <i class="fas fa-save"></i> Simpan Token
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Container -->
+            <div class="chat-card">
+                <div class="chat-header">
+                    <h2><i class="fas fa-comment-dots"></i> Pirate Chat</h2>
+                    <div class="chat-info">
+                        <span class="status online"><i class="fas fa-circle"></i> API Connected</span>
+                        <span class="model-info">Using: Mistral 7B</span>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Initial message -->
+                    <div class="message bot">
+                        <div class="avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="sender">Pirate Bot</div>
+                            <div class="text">Ahoy there, me hearty! I be a pirate chatbot powered by AI from Hugging Face. Ask me anything, and I'll answer in true pirate fashion! What be on yer mind?</div>
+                            <div class="timestamp">Just now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>Pirate Bot is thinking...</span>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea 
+                            id="userInput" 
+                            placeholder="Type yer message here, ye scallywag! (Press Enter to send, Shift+Enter for new line)" 
+                            rows="2"
+                        ></textarea>
+                        <div class="input-buttons">
+                            <button id="sendBtn" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                            <button id="clearBtn" class="btn-secondary">
+                                <i class="fas fa-trash-alt"></i> Clear
                             </button>
                         </div>
                     </div>
-
-                    <div class="option-card" id="optionFile">
-                        <h3><i class="fas fa-file-import"></i> 2. Import dari File</h3>
-                        <p>Upload file JavaScript dengan token:</p>
-                        <div class="file-upload">
-                            <input type="file" id="tokenFile" accept=".js,.txt,.json">
-                            <label for="tokenFile" class="btn-secondary">
-                                <i class="fas fa-upload"></i> Pilih File
-                            </label>
-                            <div id="fileName">Belum ada file dipilih</div>
+                    
+                    <!-- Quick Prompts -->
+                    <div class="quick-prompts">
+                        <p><i class="fas fa-lightbulb"></i> Try these prompts:</p>
+                        <div class="prompt-buttons">
+                            <button class="prompt-btn" data-prompt="Tell me about buried treasure!">
+                                <i class="fas fa-treasure-chest"></i> Buried Treasure
+                            </button>
+                            <button class="prompt-btn" data-prompt="What's a pirate's favorite drink?">
+                                <i class="fas fa-glass-whiskey"></i> Pirate Drink
+                            </button>
+                            <button class="prompt-btn" data-prompt="How do I become a pirate captain?">
+                                <i class="fas fa-crown"></i> Pirate Captain
+                            </button>
+                            <button class="prompt-btn" data-prompt="Tell me a pirate joke!">
+                                <i class="fas fa-laugh"></i> Pirate Joke
+                            </button>
                         </div>
-                        <p class="note">File harus berisi: <code>const HF_TOKEN = "hf_...";</code></p>
                     </div>
+                </div>
 
-                    <div class="option-card" id="optionDirect">
-                        <h3><i class="fas fa-code"></i> 3. Token Langsung</h3>
-                        <p>Token sudah didefinisikan di file config.js:</p>
-                        <div class="token-preview">
-                            <code id="directTokenPreview">// config.js akan dimuat...</code>
+                <!-- Settings -->
+                <div class="settings">
+                    <div class="setting-row">
+                        <div class="setting-item">
+                            <label for="styleSelect"><i class="fas fa-language"></i> Speaking Style:</label>
+                            <select id="styleSelect">
+                                <option value="pirate">🏴‍☠️ Pirate Talk</option>
+                                <option value="normal">🤖 Normal AI</option>
+                                <option value="shakespeare">🎭 Shakespearean</option>
+                                <option value="valley">💁 Valley Girl</option>
+                            </select>
                         </div>
-                        <button id="useDirectTokenBtn" class="btn-primary">
-                            <i class="fas fa-bolt"></i> Gunakan Token
-                        </button>
-                    </div>
-                </div>
-
-                <div class="token-help">
-                    <h4><i class="fas fa-info-circle"></i> Cara Mendapatkan Token:</h4>
-                    <ol>
-                        <li>Buka <a href="https://huggingface.co/settings/tokens" target="_blank">Hugging Face → Settings → Tokens</a></li>
-                        <li>Buat token baru (pilih "Write")</li>
-                        <li>Pastikan akun Anda memiliki akses ke model LLaMA 3.2</li>
-                        <li>Salin token yang dimulai dengan <code>hf_</code></li>
-                    </ol>
-                    <div class="security-note">
-                        <i class="fas fa-shield-alt"></i>
-                        <strong>Keamanan:</strong> Token hanya disimpan di sessionStorage browser dan akan hilang saat tab ditutup.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chat Interface -->
-        <div class="chat-interface" id="chatInterface" style="display: none;">
-            <div class="chat-header">
-                <div class="model-info">
-                    <span class="model-badge">
-                        <i class="fab fa-huggingface"></i>
-                        LLaMA 3.2-3B-Instruct
-                    </span>
-                    <span class="session-info" id="sessionInfo">
-                        <i class="fas fa-clock"></i> Sesi Aktif
-                    </span>
-                </div>
-                <div class="chat-controls">
-                    <button id="clearChatBtn" class="btn-secondary">
-                        <i class="fas fa-trash-alt"></i> Hapus Chat
-                    </button>
-                    <button id="exportChatBtn" class="btn-secondary">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            </div>
-
-            <!-- Chat Messages -->
-            <div class="chat-messages" id="chatMessages">
-                <div class="message system-message">
-                    <div class="message-content">
-                        <div class="message-text">
-                            <strong>Sistem:</strong> Token telah dikonfigurasi! Anda dapat mulai chatting dengan LLaMA 3.2.
-                            Token akan tersimpan selama sesi browser ini aktif.
+                        <div class="setting-item">
+                            <label for="lengthSelect"><i class="fas fa-text-height"></i> Response Length:</label>
+                            <select id="lengthSelect">
+                                <option value="50">Short</option>
+                                <option value="100" selected>Medium</option>
+                                <option value="200">Long</option>
+                                <option value="300">Very Long</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Input Area -->
-            <div class="input-area">
-                <div class="input-wrapper">
-                    <textarea id="messageInput" 
-                              placeholder="Ketik pesan untuk LLaMA 3.2... (Shift+Enter untuk baris baru)" 
-                              rows="1"
-                              spellcheck="true"></textarea>
-                    <div class="input-buttons">
-                        <button id="sendBtn" class="btn-send" disabled>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                        <button id="stopBtn" class="btn-stop" disabled>
-                            <i class="fas fa-stop"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="chat-settings">
-                    <div class="settings-group">
-                        <label for="temperature">
-                            <i class="fas fa-thermometer-half"></i>
-                            <span>Temperature: <span id="tempValue">0.7</span></span>
-                        </label>
-                        <input type="range" id="temperature" min="0.1" max="1.0" step="0.1" value="0.7">
-                    </div>
-
-                    <div class="settings-group">
-                        <label for="maxTokens">
-                            <i class="fas fa-ruler-horizontal"></i>
-                            <span>Max Tokens: <span id="tokensValue">512</span></span>
-                        </label>
-                        <input type="range" id="maxTokens" min="50" max="1024" step="50" value="512">
-                    </div>
-
-                    <div class="settings-group">
-                        <label for="streamingToggle">
-                            <i class="fas fa-stream"></i>
-                            <span>Streaming Response</span>
-                        </label>
-                        <label class="switch">
-                            <input type="checkbox" id="streamingToggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
+            <!-- Info Panel -->
+            <div class="info-card">
+                <h3><i class="fas fa-info-circle"></i> How It Works</h3>
+                <ul>
+                    <li><i class="fas fa-code"></i> This chatbot uses Hugging Face Inference API</li>
+                    <li><i class="fas fa-brain"></i> Powered by Mistral-7B model</li>
+                    <li><i class="fas fa-shield-alt"></i> Your messages are sent directly to Hugging Face</li>
+                    <li><i class="fas fa-history"></i> No message history is stored</li>
+                    <li><i class="fas fa-bolt"></i> Responses are generated in real-time</li>
+                </ul>
+                
+                <div class="api-info">
+                    <h4><i class="fas fa-key"></i> API Information</h4>
+                    <p><strong>Model:</strong> mistralai/Mistral-7B-Instruct-v0.1</p>
+                    <p><strong>Endpoint:</strong> Hugging Face Inference API</p>
+                    <p><strong>Rate Limit:</strong> Limited by free tier</p>
                 </div>
             </div>
-
-            <!-- Chat Stats -->
-            <div class="chat-stats">
-                <div class="stat-item">
-                    <i class="fas fa-comment"></i>
-                    <span>Pesan: <span id="messageCount">0</span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-database"></i>
-                    <span>Model: <span id="modelName">LLaMA-3.2-3B</span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Token: <span id="tokenShort">Tidak aktif</span></span>
-                </div>
-            </div>
-        </div>
+        </main>
 
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h4><i class="fas fa-lock"></i> Keamanan Token</h4>
-                    <p>Token hanya disimpan di sessionStorage browser. Token akan otomatis terhapus saat:</p>
-                    <ul>
-                        <li>Browser/tab ditutup</li>
-                        <li>Sesi berakhir (setelah beberapa jam idle)</li>
-                        <li>Anda mengklik "Hapus Sesi"</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Peringatan</h4>
-                    <p>Jangan pernah membagikan token Hugging Face Anda. Token memberikan akses penuh ke akun Anda.</p>
-                    <p>Website ini berjalan 100% di browser Anda. Tidak ada server yang menyimpan token.</p>
-                </div>
-                <div class="footer-section">
-                    <h4><i class="fas fa-code"></i> Teknologi</h4>
-                    <p>
-                        <strong>Model:</strong> meta-llama/LLaMA-3.2-3B-Instruct<br>
-                        <strong>API:</strong> Hugging Face Inference API<br>
-                        <strong>Hosting:</strong> GitHub Pages
-                    </p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>LLaMA 3.2 Chatbot &copy; 2024 | Token Aman - Sesi Browser</p>
-                <p class="warning">
-                    <i class="fas fa-shield-alt"></i>
-                    Token Anda aman di browser Anda sendiri
+                <p>
+                    <i class="fas fa-code"></i> Built with HTML, CSS & JavaScript | 
+                    <i class="fas fa-cloud"></i> Powered by Hugging Face API |
+                    <i class="fas fa-graduation-cap"></i> For Educational Purposes
+                </p>
+                <p class="disclaimer">
+                    <i class="fas fa-exclamation-triangle"></i> Note: This is a demo application. API tokens are exposed in client-side code for learning purposes only.
                 </p>
             </div>
         </footer>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="overlay">
-        <div class="overlay-content">
-            <div class="spinner"></div>
-            <h3>Mengirim ke LLaMA 3.2...</h3>
-            <p id="loadingText">Memproses permintaan Anda</p>
-        </div>
-    </div>
-
-    <!-- Token Modal -->
-    <div id="tokenModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-key"></i> Token Saat Ini</h3>
-                <button id="closeModalBtn" class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="token-view">
-                    <code id="currentToken"></code>
-                </div>
-                <div class="token-actions">
-                    <button id="copyTokenBtn" class="btn-secondary">
-                        <i class="fas fa-copy"></i> Salin
-                    </button>
-                    <button id="clearTokenBtn" class="btn-danger">
-                        <i class="fas fa-trash"></i> Hapus Token
-                    </button>
-                </div>
-                <p class="modal-note">
-                    <i class="fas fa-info-circle"></i>
-                    Token ini hanya tersimpan di sessionStorage browser saat ini.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="config.js"></script>
+    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
