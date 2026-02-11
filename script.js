@@ -1,5 +1,5 @@
 // API Configuration (TOKEN HERE - FOR LEARNING ONLY!)
-const HF_TOKEN = "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"; // Replace with your actual token
+const HF_TOKEN = "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"; // Replace with your actual token
 const API_URL = "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct";
 // DOM Elements
 const chatMessages = document.getElementById('chatMessages');
