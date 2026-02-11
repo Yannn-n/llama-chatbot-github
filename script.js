@@ -254,7 +254,7 @@ userInput.addEventListener('keydown', (e) => {
 
 // Demo functionality without API (if no token)
 function demoMode() {
-    if (!HF_TOKEN || HF_TOKEN === "hf_your_token_here") {
+    if (!HF_TOKEN || HF_TOKEN === "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") {
         console.log("Demo mode activated - using mock responses");
         
         // Override the API call function
