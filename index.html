@@ -1,166 +1,358 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏴‍☠️ Pirate Chatbot - AI Powered</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Seaweed+Script&family=Special+Elite&display=swap" rel="stylesheet">
+    <title>LLM Chatbot - Hugging Face</title>
+    <style>
+        /* ===== CSS SAMA SEPERTI SEBELUMNYA (salin dari jawaban sebelumnya) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+            max-height: 700px;
+        }
+
+        .chat-header {
+            background: #4a69bd;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #4a69bd;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: #e0e0e0;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator {
+            align-self: flex-start;
+            background: #e0e0e0;
+            color: #555;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #777;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        #user-input:focus {
+            border-color: #4a69bd;
+        }
+
+        #send-btn {
+            background: #4a69bd;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #send-btn:hover {
+            background: #1e3799;
+        }
+
+        #send-btn:disabled {
+            background: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background: #f1f1f1;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .footer a {
+            color: #4a69bd;
+            text-decoration: none;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #ef5350;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="pirate-title">
-                <div class="title-icon">
-                    <i class="fas fa-skull-crossbones"></i>
-                    <i class="fas fa-ship"></i>
-                    <i class="fas fa-treasure-chest"></i>
-                </div>
-                <h1>Pirate Chatbot</h1>
-                <p class="subtitle">Ahoy matey! Chat with an AI pirate using Hugging Face API</p>
+    <div class="chat-container">
+        <div class="chat-header">
+            🤖 LLM Chatbot (Hugging Face)
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                Halo! Saya terhubung ke model AI gratis dari Hugging Face. Silakan tanya apa saja!
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Chat Container -->
-            <div class="chat-card">
-                <div class="chat-header">
-                    <h2><i class="fas fa-comment-dots"></i> Pirate Chat</h2>
-                    <div class="chat-info">
-                        <span class="status online"><i class="fas fa-circle"></i> API Connected</span>
-                        <span class="model-info">Using: Mistral 7B</span>
-                    </div>
-                </div>
-
-                <!-- Chat Messages -->
-                <div class="chat-messages" id="chatMessages">
-                    <!-- Initial message -->
-                    <div class="message bot">
-                        <div class="avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <div class="sender">Pirate Bot</div>
-                            <div class="text">Ahoy there, me hearty! I be a pirate chatbot powered by AI from Hugging Face. Ask me anything, and I'll answer in true pirate fashion! What be on yer mind?</div>
-                            <div class="timestamp">Just now</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Typing Indicator -->
-                <div class="typing-indicator" id="typingIndicator">
-                    <div class="typing-dots">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <span>Pirate Bot is thinking...</span>
-                </div>
-
-                <!-- Input Area -->
-                <div class="input-area">
-                    <div class="input-container">
-                        <textarea 
-                            id="userInput" 
-                            placeholder="Type yer message here, ye scallywag! (Press Enter to send, Shift+Enter for new line)" 
-                            rows="2"
-                        ></textarea>
-                        <div class="input-buttons">
-                            <button id="sendBtn" class="btn-primary">
-                                <i class="fas fa-paper-plane"></i> Send
-                            </button>
-                            <button id="clearBtn" class="btn-secondary">
-                                <i class="fas fa-trash-alt"></i> Clear
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Prompts -->
-                    <div class="quick-prompts">
-                        <p><i class="fas fa-lightbulb"></i> Try these prompts:</p>
-                        <div class="prompt-buttons">
-                            <button class="prompt-btn" data-prompt="Tell me about buried treasure!">
-                                <i class="fas fa-treasure-chest"></i> Buried Treasure
-                            </button>
-                            <button class="prompt-btn" data-prompt="What's a pirate's favorite drink?">
-                                <i class="fas fa-glass-whiskey"></i> Pirate Drink
-                            </button>
-                            <button class="prompt-btn" data-prompt="How do I become a pirate captain?">
-                                <i class="fas fa-crown"></i> Pirate Captain
-                            </button>
-                            <button class="prompt-btn" data-prompt="Tell me a pirate joke!">
-                                <i class="fas fa-laugh"></i> Pirate Joke
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Settings -->
-                <div class="settings">
-                    <div class="setting-row">
-                        <div class="setting-item">
-                            <label for="styleSelect"><i class="fas fa-language"></i> Speaking Style:</label>
-                            <select id="styleSelect">
-                                <option value="pirate">🏴‍☠️ Pirate Talk</option>
-                                <option value="normal">🤖 Normal AI</option>
-                                <option value="shakespeare">🎭 Shakespearean</option>
-                                <option value="valley">💁 Valley Girl</option>
-                            </select>
-                        </div>
-                        <div class="setting-item">
-                            <label for="lengthSelect"><i class="fas fa-text-height"></i> Response Length:</label>
-                            <select id="lengthSelect">
-                                <option value="50">Short</option>
-                                <option value="100" selected>Medium</option>
-                                <option value="200">Long</option>
-                                <option value="300">Very Long</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Info Panel -->
-            <div class="info-card">
-                <h3><i class="fas fa-info-circle"></i> How It Works</h3>
-                <ul>
-                    <li><i class="fas fa-code"></i> This chatbot uses Hugging Face Inference API</li>
-                    <li><i class="fas fa-brain"></i> Powered by Mistral-7B model</li>
-                    <li><i class="fas fa-shield-alt"></i> Your messages are sent directly to Hugging Face</li>
-                    <li><i class="fas fa-history"></i> No message history is stored</li>
-                    <li><i class="fas fa-bolt"></i> Responses are generated in real-time</li>
-                </ul>
-                
-                <div class="api-info">
-                    <h4><i class="fas fa-key"></i> API Information</h4>
-                    <p><strong>Model:</strong> mistralai/Mistral-7B-Instruct-v0.1</p>
-                    <p><strong>Endpoint:</strong> Hugging Face Inference API</p>
-                    <p><strong>Rate Limit:</strong> Limited by free tier</p>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <p>
-                    <i class="fas fa-code"></i> Built with HTML, CSS & JavaScript | 
-                    <i class="fas fa-cloud"></i> Powered by Hugging Face API |
-                    <i class="fas fa-graduation-cap"></i> For Educational Purposes
-                </p>
-                <p class="disclaimer">
-                    <i class="fas fa-exclamation-triangle"></i> Note: This is a demo application. API tokens are exposed in client-side code for learning purposes only.
-                </p>
-            </div>
-        </footer>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="userInput" placeholder="Ketik pesan..." autocomplete="off">
+            <button id="sendBtn">Kirim</button>
+        </div>
+        <div class="footer">
+            🧠 Menggunakan <a href="https://huggingface.co/microsoft/DialoGPT-medium" target="_blank">DialoGPT-medium</a> via Hugging Face Inference API
+        </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
+    <script>
+        // ========== 🔑 SETTING API HUGGING FACE ==========
+        // 1. Daftar di https://huggingface.co/join
+        // 2. Buat token di https://huggingface.co/settings/tokens
+        // 3. Copy token dan tempel di bawah (ganti 'YOUR_TOKEN_HERE')
+        const HF_API_TOKEN = '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'; // <-- GANTI DENGAN TOKEN ASLIMU!
+        
+        // Pilih model yang ingin digunakan (gratis, cocok untuk chat)
+        const HF_MODEL = 'microsoft/DialoGPT-medium'; // Alternatif: 'microsoft/DialoGPT-small', 'google/flan-t5-base' dll.
+        const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+
+        // ========== ELEMEN DOM ==========
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // ========== FUNGSI BANTU ==========
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addErrorMessage(text) {
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('error-message');
+            errorDiv.textContent = '❌ ' + text;
+            chatMessages.appendChild(errorDiv);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.classList.add('typing-indicator');
+            indicator.id = 'typingIndicator';
+            indicator.innerHTML = `
+                Bot sedang mengetik
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chatMessages.appendChild(indicator);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function setLoadingState(isLoading) {
+            userInput.disabled = isLoading;
+            sendBtn.disabled = isLoading;
+            if (isLoading) {
+                userInput.style.opacity = '0.6';
+                sendBtn.style.opacity = '0.6';
+            } else {
+                userInput.style.opacity = '1';
+                sendBtn.style.opacity = '1';
+                userInput.focus();
+            }
+        }
+
+        // ========== PANGGIL API HUGGING FACE ==========
+        async function getBotResponse(userText) {
+            // Jika token belum diganti, beri pesan error
+            if (HF_API_TOKEN === 'hf_xxxxxxxxxxxxxxxxxxxxxxxxxxx') {
+                throw new Error('Token Hugging Face belum diatur. Silakan ganti HF_API_TOKEN dengan token aslimu.');
+            }
+
+            // Payload untuk API (format tergantung model, DialoGPT menggunakan "inputs")
+            const payload = {
+                inputs: userText,
+                options: {
+                    wait_for_model: true  // Tunggu sampai model siap (jika cold start)
+                }
+            };
+
+            try {
+                const response = await fetch(HF_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${HF_API_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || `HTTP error ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Format respons DialoGPT: array of generated text
+                // Contoh: [{"generated_text": "Halo juga!"}]
+                if (Array.isArray(data) && data.length > 0) {
+                    return data[0].generated_text;
+                } else if (typeof data === 'object' && data.generated_text) {
+                    return data.generated_text;
+                } else {
+                    // Fallback untuk model lain
+                    return JSON.stringify(data);
+                }
+            } catch (error) {
+                console.error('Error calling Hugging Face API:', error);
+                throw error;
+            }
+        }
+
+        // ========== KIRIM PESAN ==========
+        async function sendMessage() {
+            const userText = userInput.value.trim();
+            if (userText === '') return;
+
+            // Tampilkan pesan user
+            addMessage(userText, true);
+            userInput.value = '';
+
+            // Loading + indikator ketik
+            setLoadingState(true);
+            showTypingIndicator();
+
+            try {
+                // Panggil API
+                const botResponse = await getBotResponse(userText);
+                removeTypingIndicator();
+                addMessage(botResponse, false);
+            } catch (error) {
+                removeTypingIndicator();
+                addErrorMessage(`Gagal mendapatkan respons: ${error.message}. Cek token/koneksi.`);
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // ========== EVENT LISTENER ==========
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        window.addEventListener('load', () => userInput.focus());
+    </script>
 </body>
 </html>
