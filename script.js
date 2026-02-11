@@ -1,5 +1,5 @@
 // API Configuration (TOKEN HERE - FOR LEARNING ONLY!)
-const HF_TOKEN = "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"; // Replace with your actual token
+const HF_TOKEN = "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"; // Replace with your actual token
 const API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct/";
 
 // DOM Elements
@@ -254,7 +254,7 @@ userInput.addEventListener('keydown', (e) => {
 
 // Demo functionality without API (if no token)
 function demoMode() {
-    if (!HF_TOKEN || HF_TOKEN === "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") {
+    if (!HF_TOKEN || HF_TOKEN === "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") {
         console.log("Demo mode activated - using mock responses");
         
         // Override the API call function
