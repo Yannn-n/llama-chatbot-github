@@ -1,5 +1,5 @@
 // API Configuration (TOKEN HERE - FOR LEARNING ONLY!)
-const HF_TOKEN = "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"; // Replace with your actual token
+const HF_TOKEN = "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"; // Replace with your actual token
 const API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct/";
 
 // DOM Elements
