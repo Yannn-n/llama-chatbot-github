@@ -161,7 +161,7 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <span>🤖 Gemini AI</span>
+            <span>🤖 Gemini-AI</span>
         </div>
         <div class="api-key-warning">
             ⚠️ Ganti <strong>GEMINI_API_KEY</strong> di kode dengan milikmu. 
@@ -185,8 +185,7 @@
         const GEMINI_API_KEY = 'AIzaSyBML4OjlWnatl04U_5u78hQ1Bs3mFQuQI8';  // ⚠️ WAJIB DIISI!
 
         // URL API Gemini (model pro)
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         // Elemen DOM
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
