@@ -2,357 +2,306 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Chatbot - Hugging Face</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>🤖 Chatbot Gemini (Frontend Only)</title>
     <style>
-        /* ===== CSS SAMA SEPERTI SEBELUMNYA (salin dari jawaban sebelumnya) ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(145deg, #0b1a2e 0%, #1a2f3f 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
-
         .chat-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
+            height: 85vh;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-            max-height: 700px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-
         .chat-header {
-            background: #4a69bd;
+            background: #075e54;
             color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.4rem;
+            padding: 18px 20px;
+            font-size: 1.2rem;
             font-weight: 600;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: #f9f9f9;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .user-message {
-            align-self: flex-end;
-            background: #4a69bd;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .bot-message {
-            align-self: flex-start;
-            background: #e0e0e0;
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-
-        .typing-indicator {
-            align-self: flex-start;
-            background: #e0e0e0;
-            color: #555;
-            padding: 12px 16px;
-            border-radius: 18px;
-            border-bottom-left-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-style: italic;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dots span {
-            width: 8px;
-            height: 8px;
-            background: #777;
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
-            30% { transform: translateY(-6px); opacity: 1; }
-        }
-
-        .chat-input-container {
-            display: flex;
-            padding: 15px;
-            background: white;
-            border-top: 1px solid #ddd;
             gap: 10px;
         }
-
-        #user-input {
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #e5ded8;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+        .user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .bot-message {
+            align-self: flex-start;
+        }
+        .bubble {
+            padding: 12px 16px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            line-height: 1.4;
+            font-size: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .user-message .bubble {
+            background: #dcf8c6;
+            border-bottom-right-radius: 4px;
+            color: #111;
+        }
+        .bot-message .bubble {
+            background: white;
+            border-bottom-left-radius: 4px;
+            color: #111;
+        }
+        .typing-indicator {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border-bottom-left-radius: 4px;
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #888;
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.4; transform: translateY(0); }
+            30% { opacity: 1; transform: translateY(-4px); }
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 12px 16px;
+            background: #f0f0f0;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+            align-items: center;
+        }
+        #userInput {
             flex: 1;
             padding: 12px 16px;
-            border: 1px solid #ccc;
-            border-radius: 25px;
-            outline: none;
-            font-size: 1rem;
-            transition: border 0.2s;
-        }
-
-        #user-input:focus {
-            border-color: #4a69bd;
-        }
-
-        #send-btn {
-            background: #4a69bd;
-            color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 24px;
+            outline: none;
+            font-size: 15px;
+            background: white;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        #sendBtn {
+            background: #075e54;
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
-        #send-btn:hover {
-            background: #1e3799;
+        #sendBtn:active {
+            background: #128c7e;
+            transform: scale(0.95);
         }
-
-        #send-btn:disabled {
+        #sendBtn.disabled {
             background: #a0a0a0;
-            cursor: not-allowed;
+            pointer-events: none;
         }
-
-        .footer {
-            text-align: center;
-            padding: 10px;
-            background: #f1f1f1;
-            font-size: 0.8rem;
-            color: #666;
+        .api-key-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 16px;
+            font-size: 12px;
+            border-bottom: 1px solid #ffeeba;
+            word-break: break-word;
         }
-
-        .footer a {
-            color: #4a69bd;
+        a {
+            color: #075e54;
             text-decoration: none;
-        }
-
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 4px solid #ef5350;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            font-size: 0.9rem;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            🤖 LLM Chatbot (Hugging Face)
+            <span>🤖 Gemini AI</span>
         </div>
-        <div class="chat-messages" id="chatMessages">
+        <div class="api-key-warning">
+            ⚠️ Ganti <strong>GEMINI_API_KEY</strong> di kode dengan milikmu. 
+            <a href="https://aistudio.google.com/app/apikey" target="_blank">Dapatkan API Key gratis</a>.
+        </div>
+        <div id="chatMessages" class="chat-messages">
             <div class="message bot-message">
-                Halo! Saya terhubung ke model AI gratis dari Hugging Face. Silakan tanya apa saja!
+                <div class="bubble">
+                    Halo! Aku chatbot Google Gemini. Tanyakan apa saja! 👋
+                </div>
             </div>
         </div>
-        <div class="chat-input-container">
+        <div class="chat-input-area">
             <input type="text" id="userInput" placeholder="Ketik pesan..." autocomplete="off">
-            <button id="sendBtn">Kirim</button>
-        </div>
-        <div class="footer">
-            🧠 Menggunakan <a href="https://huggingface.co/microsoft/DialoGPT-medium" target="_blank">meta-llama</a> via Hugging Face Inference API
+            <button id="sendBtn" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
     <script>
-        // ========== 🔑 SETTING API HUGGING FACE ==========
-        // 1. Daftar di https://huggingface.co/join
-        // 2. Buat token di https://huggingface.co/settings/tokens
-        // 3. Copy token dan tempel di bawah (ganti 'YOUR_TOKEN_HERE')
-        const HF_API_TOKEN = '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'; // <-- GANTI DENGAN TOKEN ASLIMU!
-        
-        // Pilih model yang ingin digunakan (gratis, cocok untuk chat)
-        const HF_MODEL = 'meta-llama/Llama-3.2-1B-Instruct'; // Alternatif: 'microsoft/DialoGPT-small', 'google/flan-t5-base' dll.
-        const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+        // 🔐 GANTI DENGAN API KEY GEMINI ANDA
+        const GEMINI_API_KEY = 'AIzaSyBJ3bGj1IbdFnpj5lqqLtVK42sWmK08o1Y';  // ⚠️ WAJIB DIISI!
 
-        // ========== ELEMEN DOM ==========
+        // URL API Gemini (model pro)
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+        // Elemen DOM
         const chatMessages = document.getElementById('chatMessages');
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        // ========== FUNGSI BANTU ==========
+        // Fungsi menambahkan pesan ke layar
         function addMessage(text, isUser = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
-            messageDiv.textContent = text;
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = text;
+            
+            messageDiv.appendChild(bubble);
             chatMessages.appendChild(messageDiv);
-            scrollToBottom();
-        }
-
-        function addErrorMessage(text) {
-            const errorDiv = document.createElement('div');
-            errorDiv.classList.add('error-message');
-            errorDiv.textContent = '❌ ' + text;
-            chatMessages.appendChild(errorDiv);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
+            
+            // Scroll ke bawah
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        // Fungsi menampilkan indikator "sedang mengetik"
         function showTypingIndicator() {
             const indicator = document.createElement('div');
-            indicator.classList.add('typing-indicator');
+            indicator.className = 'message bot-message';
             indicator.id = 'typingIndicator';
             indicator.innerHTML = `
-                Bot sedang mengetik
-                <div class="typing-dots">
+                <div class="typing-indicator">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
             `;
             chatMessages.appendChild(indicator);
-            scrollToBottom();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        // Fungsi menghapus indikator typing
         function removeTypingIndicator() {
             const indicator = document.getElementById('typingIndicator');
             if (indicator) indicator.remove();
         }
 
-        function setLoadingState(isLoading) {
-            userInput.disabled = isLoading;
-            sendBtn.disabled = isLoading;
-            if (isLoading) {
-                userInput.style.opacity = '0.6';
-                sendBtn.style.opacity = '0.6';
-            } else {
-                userInput.style.opacity = '1';
-                sendBtn.style.opacity = '1';
-                userInput.focus();
-            }
-        }
-
-        // ========== PANGGIL API HUGGING FACE ==========
-        async function getBotResponse(userText) {
-            // Jika token belum diganti, beri pesan error
-            if (HF_API_TOKEN === 'hf_xxxxxxxxxxxxxxxxxxxxxxxxxxx') {
-                throw new Error('Token Hugging Face belum diatur. Silakan ganti HF_API_TOKEN dengan token aslimu.');
-            }
-
-            // Payload untuk API (format tergantung model, DialoGPT menggunakan "inputs")
-            const payload = {
-                inputs: userText,
-                options: {
-                    wait_for_model: true  // Tunggu sampai model siap (jika cold start)
-                }
-            };
-
+        // Fungsi panggil Gemini API
+        async function getGeminiResponse(prompt) {
             try {
-                const response = await fetch(HF_API_URL, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${HF_API_TOKEN}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    })
                 });
 
+                const data = await response.json();
+
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || `HTTP error ${response.status}`);
+                    const errorMsg = data.error?.message || `HTTP error ${response.status}`;
+                    throw new Error(errorMsg);
                 }
 
-                const data = await response.json();
-                
-                // Format respons DialoGPT: array of generated text
-                // Contoh: [{"generated_text": "Halo juga!"}]
-                if (Array.isArray(data) && data.length > 0) {
-                    return data[0].generated_text;
-                } else if (typeof data === 'object' && data.generated_text) {
-                    return data.generated_text;
-                } else {
-                    // Fallback untuk model lain
-                    return JSON.stringify(data);
-                }
+                // Ambil teks hasil
+                const reply = data.candidates[0].content.parts[0].text;
+                return reply;
             } catch (error) {
-                console.error('Error calling Hugging Face API:', error);
-                throw error;
+                console.error('Gemini API Error:', error);
+                return `❌ Error: ${error.message}. Cek API key atau jaringan.`;
             }
         }
 
-        // ========== KIRIM PESAN ==========
+        // Kirim pesan
         async function sendMessage() {
-            const userText = userInput.value.trim();
-            if (userText === '') return;
+            const prompt = userInput.value.trim();
+            if (!prompt) return;
+
+            // Nonaktifkan tombol & input
+            userInput.disabled = true;
+            sendBtn.classList.add('disabled');
 
             // Tampilkan pesan user
-            addMessage(userText, true);
+            addMessage(prompt, true);
             userInput.value = '';
 
-            // Loading + indikator ketik
-            setLoadingState(true);
+            // Tampilkan indikator typing
             showTypingIndicator();
 
-            try {
-                // Panggil API
-                const botResponse = await getBotResponse(userText);
-                removeTypingIndicator();
-                addMessage(botResponse, false);
-            } catch (error) {
-                removeTypingIndicator();
-                addErrorMessage(`Gagal mendapatkan respons: ${error.message}. Cek token/koneksi.`);
-            } finally {
-                setLoadingState(false);
-            }
+            // Panggil Gemini
+            const reply = await getGeminiResponse(prompt);
+
+            // Hapus indikator typing
+            removeTypingIndicator();
+
+            // Tampilkan balasan bot
+            addMessage(reply, false);
+
+            // Aktifkan kembali input
+            userInput.disabled = false;
+            sendBtn.classList.remove('disabled');
+            userInput.focus();
         }
 
-        // ========== EVENT LISTENER ==========
-        sendBtn.addEventListener('click', sendMessage);
+        // Kirim dengan tekan Enter
         userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
         });
-        window.addEventListener('load', () => userInput.focus());
+
+        // Validasi API Key
+        if (GEMINI_API_KEY === 'ISI_API_KEY_ANDA_DISINI') {
+            addMessage('⚠️ **PERINGATAN**: Ganti `GEMINI_API_KEY` dengan API key asli Anda di kode!', false);
+        }
     </script>
 </body>
 </html>
